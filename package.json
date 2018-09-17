@@ -1,0 +1,31 @@
+{
+  "name": "wmk-splitter-eth26",
+  "version": "1.0.0",
+  "description": "First project of ETH-26 B9 course about becoming a certified blockchain developer",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wmk1/wmk-splitter.git"
+  },
+  "keywords": [
+    "blockchain",
+    "geth",
+    "web3",
+    "truffle"
+  ],
+  "author": "Wojciech Kalinski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wmk1/wmk-splitter/issues"
+  },
+  "homepage": "https://github.com/wmk1/wmk-splitter#readme",
+  "dependencies": {
+    "web3": "^1.0.0-beta.36"
+  }
+}
