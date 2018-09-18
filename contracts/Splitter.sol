@@ -1,25 +1,54 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.24;
 
 contract Splitter {
-    uint256 ownerWeis;
+    uint ownerWeis;
     address owner;
+
+    WalletOwner[2] public recipients;
+
+    bool isOwner;
 
     struct WalletOwner {
         uint balance;
         address holder;
     }
 
-    function Splitter(address bob, address carol){
-        ownerWeis = 0;
-        msg.sender = owner;
-        recipients[1].balance = 0;
-        recipients[2].balance = 0;
-        recipients[1].holder = bob;
-        recipients[2].holder = carol;
+    modifier onlyIfOwner {
+        require(isOwner);
+        _;
     }
 
-    WalletOwner[2] public recipients;
+    event LogSplittedSucceded(address _owner, uint weis);
 
+    constructor(address _bob, address _carol) public payable {
+        owner = msg.sender;
+        ownerWeis = 0;
+        recipients[0].balance = 0;
+        recipients[1].balance = 0;
+        recipients[0].holder = _bob;
+        recipients[1].holder = _carol;
+    }
 
+    function sendEther() public payable {
+        uint transferedAmount = transferSplit(msg.value);
+        for (uint i = 0; i < recipients.length; i++) {
+            recipients[i].balance += transferedAmount;
+        }
+    }
+
+    function transferSplit(uint _ether) private view returns (uint splittedAmount) {
+        uint etherForSplit = _ether + ownerWeis;
+        if (_ether % 2 == 0) {
+            etherForSplit = etherForSplit / 2;
+        }
+        else {
+            etherForSplit = (etherForSplit - 1) / 2;
+        }
+        return etherForSplit;
+    }
+
+    function checkBalance(address _walletOwner) public payable returns (uint256 addressBalance) {
+        return _walletOwner.balance;
+    }
 
 }
