@@ -18,7 +18,8 @@ contract Splitter {
         _;
     }
 
-    event LogSplittedSucceded(address _owner, uint weis);
+    event LogSplittedSucceded(uint _weis);
+    event LogEtherSended(address _owner);
 
     constructor(address _bob, address _carol) public payable {
         owner = msg.sender;
@@ -33,6 +34,7 @@ contract Splitter {
         uint transferedAmount = transferSplit(msg.value);
         for (uint i = 0; i < recipients.length; i++) {
             recipients[i].balance += transferedAmount;
+            emit LogEtherSended(recipients[i].holder);
         }
     }
 
@@ -44,6 +46,7 @@ contract Splitter {
         else {
             etherForSplit = (etherForSplit - 1) / 2;
         }
+        emit LogSplittedSucceded(_ether);
         return etherForSplit;
     }
 
