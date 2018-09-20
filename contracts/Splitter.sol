@@ -6,52 +6,42 @@ contract Splitter {
 
     WalletOwner[2] public recipients;
 
-    bool isOwner;
-
     struct WalletOwner {
         uint balance;
         address holder;
     }
 
-    modifier onlyIfOwner {
-        require(isOwner);
+    modifier validEtherSend {
+        require(msg.value > 0);
         _;
     }
 
+    
+
     event LogSplittedSucceded(uint _weis);
-    event LogEtherSended(address _owner);
+    event LogEtherSended(uint _owner);
 
     constructor(address _bob, address _carol) public payable {
+        require(_bob != 0);
+        require(_carol != 0);
         owner = msg.sender;
-        ownerWeis = 0;
         recipients[0].balance = 0;
         recipients[1].balance = 0;
         recipients[0].holder = _bob;
         recipients[1].holder = _carol;
     }
 
-    function sendEther() public payable {
-        uint transferedAmount = transferSplit(msg.value);
-        for (uint i = 0; i < recipients.length; i++) {
-            recipients[i].balance += transferedAmount;
-            emit LogEtherSended(recipients[i].holder);
+    function sendEther() public validEtherSend payable {
+        uint amount = msg.value;
+        if (amount % 2 == 0) {
+            ownerWeis = 0;
+            amount = amount / 2;
+        } else {
+            ownerWeis = 1;
+            amount = (amount / 2) -1;
         }
+        recipients[0].balance += amount;
+        recipients[1].balance += amount;
+        emit LogEtherSended(amount);
     }
-
-    function transferSplit(uint _ether) private view returns (uint splittedAmount) {
-        uint etherForSplit = _ether + ownerWeis;
-        if (_ether % 2 == 0) {
-            etherForSplit = etherForSplit / 2;
-        }
-        else {
-            etherForSplit = (etherForSplit - 1) / 2;
-        }
-        emit LogSplittedSucceded(_ether);
-        return etherForSplit;
-    }
-
-    function checkBalance(address _walletOwner) public payable returns (uint256 addressBalance) {
-        return _walletOwner.balance;
-    }
-
 }
