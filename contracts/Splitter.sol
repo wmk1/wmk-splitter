@@ -16,8 +16,6 @@ contract Splitter {
         _;
     }
 
-    
-
     event LogSplittedSucceded(uint _weis);
     event LogEtherSended(uint _owner);
 
@@ -38,7 +36,7 @@ contract Splitter {
             amount = amount / 2;
         } else {
             ownerWeis = 1;
-            amount = (amount / 2) -1;
+            amount = (amount / 2)-1;
         }
         recipients[0].balance += amount;
         recipients[1].balance += amount;
