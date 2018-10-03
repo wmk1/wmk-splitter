@@ -5,11 +5,11 @@ contract Migrations {
     uint public last_completed_migration;
 
     constructor() public {
-        msg.sender = owner;
+        owner = msg.sender;
     }
 
     modifier restricted() {
-        require(owner);
+        if (msg.sender == owner)
         _;
     }
 
