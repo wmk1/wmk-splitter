@@ -1,6 +1,7 @@
 pragma solidity ^0.4.24;
 
 contract Splitter {
+
     uint ownerWeis;
     address owner;
 

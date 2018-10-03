@@ -26,6 +26,8 @@
   },
   "homepage": "https://github.com/wmk1/wmk-splitter#readme",
   "dependencies": {
+    "artifacts": "0.0.1",
+    "grunt": "^1.0.3",
     "web3": "^1.0.0-beta.36"
   }
 }

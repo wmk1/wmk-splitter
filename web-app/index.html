@@ -1,21 +1,26 @@
 <html>
 <head>
     <title>ETH-26 - Splitter</title>
-    
     <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+    <script src="splitter.js"></script>
 </head>
 <body>
 
 <script>
     function showInfo() {
-         var account = web3.eth.getBalance(web3.eth.accounts[0]);
+         var alice = web3.eth.getBalance(web3.eth.accounts[0]).toString(10);
          var bob = web3.eth.getBalance(web3.eth.accounts[1]);
          var carol = web3.eth.getBalance(web3.eth.accounts[2]);
-    }
+         document.getElementById("alice").innerHTML = "Alice account: " + alice;
+         document.getElementById("bob").innerHTML = "Bob account: " + bob;
+         document.getElementById("carol").innerHTML = "Carol account: " + carol;
+} 
 </script>
 
-    <div id="account">Account</div>
-    <div id="bob">Balance check for Bob: </div>
+<button onclick="donate()">Donate ether</button>
+<button onclick="showInfo()">Update</button>
+    <div id="alice"></div>
+    <div id="bob"></div>
     <div id="carol"></div>
 </body>
 </html>
