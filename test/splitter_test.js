@@ -1,5 +1,5 @@
 Promise = require("bluebird");
-const Web3 = require("Web3");
+const Web3 = require('web3');
 
 const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 
@@ -10,9 +10,11 @@ let contractInstance;
 
 contract("Splitter contract", (accounts) => {
     const MAX_GAS = 30000;
-    const AMOUNT = web3.toWei(0.007, 'ether');
+    const AMOUNT = 0.0000007;
 
     console.log(accounts);
+
+    console.log("web3: " + web3.eth.accounts);
 
     let alice;
     let bob;
@@ -27,12 +29,16 @@ contract("Splitter contract", (accounts) => {
     })
 
     let ownerBalance;
-    before("Should get alice balance", async() => {
+    beforeEach("Should get alice balance", async() => {
         return web3.eth.getBalance(alice)
             .then(_balance => {
                 ownerBalance = _balance;
                 console.log("Alice balance: " + ownerBalance);
             });
+    });
+
+    it("Should check if any pre-condition thing is working properly", async () => {
+        assert.isTrue(accounts.length >= 3, accounts.length + " accounts, required 3. Something ain't right.");
     });
 
 
