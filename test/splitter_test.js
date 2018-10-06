@@ -6,6 +6,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 const Splitter = artifacts.require("./Splitter.sol");
 
 Promise.promisifyAll(web3.eth, { suffix: "Promise" });
+
 let contractInstance;
 
 contract("Splitter contract", (accounts) => {
@@ -14,11 +15,11 @@ contract("Splitter contract", (accounts) => {
 
     console.log(accounts);
 
-    console.log("web3: " + web3.eth.accounts);
-
     let alice;
     let bob;
     let carol;
+
+    let ownerBalance;
 
     beforeEach("Checking accounts", async () => {
         assert.isAtLeast(accounts.length, 3, "not enough, something is wrong here....");
@@ -26,10 +27,6 @@ contract("Splitter contract", (accounts) => {
         console.log("Owner: " + accounts[0]);
         console.log("Bob: " + bob);
         console.log("Carol: " + carol);
-    })
-
-    let ownerBalance;
-    beforeEach("Should get alice balance", async() => {
         return web3.eth.getBalance(alice)
             .then(_balance => {
                 ownerBalance = _balance;
