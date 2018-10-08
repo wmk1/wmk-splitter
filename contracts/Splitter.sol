@@ -37,7 +37,7 @@ contract Splitter {
             amount = amount / 2;
         } else {
             ownerWeis = 1;
-            amount = (amount / 2)-1;
+            amount = (amount - 1) / 2;
         }
         recipients[0].balance += amount;
         recipients[1].balance += amount;
