@@ -5,6 +5,8 @@ contract Splitter {
     uint ownerWeis;
     address owner;
 
+    mapping(address => uint) public balances;
+
     WalletOwner[2] public recipients;
 
     struct WalletOwner {
@@ -18,7 +20,7 @@ contract Splitter {
     }
 
     event LogSplittedSucceded(uint _weis);
-    event LogEtherSended(uint _owner);
+    event LogEtherSended(address _recipient, uint _owner);
 
     constructor(address _bob, address _carol) public payable {
         require(_bob != 0);
@@ -41,6 +43,11 @@ contract Splitter {
         }
         recipients[0].balance += amount;
         recipients[1].balance += amount;
-        emit LogEtherSended(amount);
+        emit LogEtherSended(recipients[0].holder, amount);
+        emit LogEtherSended(recipients[1].holder, amount);
+    }
+
+    function() public {
+        revert();
     }
 }
