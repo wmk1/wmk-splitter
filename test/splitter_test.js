@@ -23,33 +23,37 @@ contract("Splitter contract", (accounts) => {
         console.log("Bob: " + bob);
         console.log("Carol: " + carol);
 
-        contractInstance = await Splitter.new(bob, carol)
+        contractInstance = await Splitter.new(bob, carol, {from: alice});
         return web3.eth.getBalance(alice)
             .then(_balance => {
                 console.log("Alice balance: " + _balance);
             });
     });
 
-    it("Should split ether accordingly",  done => {
+    it("Should split ether accordingly",  () => {
+        let amountSended = 5000000;
+        let expectedAmount = "" + (amountSended / 2);
         //when
-         contractInstance.sendEther.call({ value: 5000000, from: alice})
-        //...now what
-            .then(success => {
-                assert.isTrue(success, "failed to do something.");
-                return contractInstance.sendEther({value: 5000000, from: alice});
+        return contractInstance.sendEther({ value: amountSended, from: alice})
+            .then(txReceipt => {
+                let eventNames = txReceipt.logs.filter(log => log.event == "LogEtherSended");
+                assert(eventNames.length > 0, "No LogEtherSended events found, it it surely emitted?");
+                assert.equal(eventNames[0].event, "LogEtherSended", "Some obstruction ");
+                return web3.eth.getBalance(carol)
             })
-            .then(resultValue => {
-                assert.equal(resultValue.toString(10), "2", "one does not simply walk into a mordor.");
-                done();
-            })
-            .catch(done);
+            .then(_carol => {
+                carol = _carol;
+                assert.strictEqual(carol, expectedAmount.toString(10));
+            });
     });
 
-    it("Should not split ether if value is 0", async () => {
-        //when
-        await contractInstance.sendEther({ value: 0, from: alice});
-
-        //then
-        assert.fail();
+    it("Should not split ether if value is 0", () => {
+        //given
+        let zeroAmountSended = 0;
+        try {
+        contractInstance.sendEther({value: zeroAmountSended, from: alice});
+        } catch(e) {
+            assert.isDefined(e, 'Contract should revert() if there are no funds.');
+        }
     })
 });
