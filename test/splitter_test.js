@@ -16,14 +16,14 @@ contract("Splitter contract", (accounts) => {
     [alice, bob, carol] = accounts;
 
     let contractInstance;
-    before("Checking if smart contract is setup properly -  accounts", async () => {
+    before("Checking if smart contract is setup properly -  accounts", () => {
         assert.isAtLeast(accounts.length, 3, "not enough, something is wrong here....");
 
         console.log("Owner: " + alice);
         console.log("Bob: " + bob);
         console.log("Carol: " + carol);
 
-        contractInstance = await Splitter.new(bob, carol, {from: alice});
+        contractInstance = Splitter.new(bob, carol, {from: alice});
         return web3.eth.getBalance(alice)
             .then(_balance => {
                 console.log("Alice balance: " + _balance);
@@ -39,9 +39,9 @@ contract("Splitter contract", (accounts) => {
             //then
             .then(txReceipt => {
                 let eventNames = txReceipt.logs.filter(log => log.event == "LogEtherSended");
-                assert(eventNames.length > 0, "No LogEtherSended events found, it it surely emitted?");
-                assert.equal(eventNames[0].event, "LogEtherSended", "Some obstruction ");
-                return web3.eth.getBalance(carol)
+                assert(eventNames.length > 0, "No LogEtherSended events found, is it surely emitted?");
+                assert.equal(eventNames[0].event, "LogEtherSended", "Some obstruction occured,");
+                return contractInstance.balances(carol)
             })
             //then
             .then(_carol => {

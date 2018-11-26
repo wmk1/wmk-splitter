@@ -1,6 +1,6 @@
 var Splitter = artifacts.require("./Splitter.sol");
 
-module.exports = function(deployer, network, accounts) {
+module.exports = function(deployer, accounts) {
     const owner = accounts[0];
     const bob = accounts[1];
     const carol = accounts[2];

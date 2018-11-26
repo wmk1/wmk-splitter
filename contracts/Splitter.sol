@@ -5,8 +5,6 @@ contract Splitter {
     uint ownerWeis;
     address owner;
 
-    mapping (address => uint) public balances;
-
     WalletOwner[2] public recipients;
 
     struct WalletOwner {
@@ -20,13 +18,14 @@ contract Splitter {
     }
 
     event LogSplittedSucceded(uint _weis);
-    event LogEtherSended(address _recipient, address _recipient2, uint _owner);
-    event LogWithdrawal(address _recipient, uint _amount);
+    event LogEtherSended(uint _owner);
 
     constructor(address _bob, address _carol) public payable {
         require(_bob != 0);
         require(_carol != 0);
         owner = msg.sender;
+        recipients[0].balance = 0;
+        recipients[1].balance = 0;
         recipients[0].holder = _bob;
         recipients[1].holder = _carol;
     }
@@ -42,19 +41,6 @@ contract Splitter {
         }
         recipients[0].balance += amount;
         recipients[1].balance += amount;
-        emit LogEtherSended(recipients[0].holder, recipients[1].holder, amount);
-    }
-
-    function withdraw() public validEtherSend payable returns(bool success) {
-        uint amount = balances[msg.sender];
-        require(amount > 0);
-        balances[msg.sender] = 0;
-        emit LogWithdrawal(msg.sender, amount);
-        msg.sender.transfer(amount);
-        return true;
-    }
-
-    function() public {
-        revert();
+        emit LogEtherSended(amount);
     }
 }
