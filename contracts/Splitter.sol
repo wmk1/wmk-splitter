@@ -20,7 +20,8 @@ contract Splitter {
     event LogSplittedSucceded(uint _weis);
     event LogEtherSended(uint _owner);
 
-    constructor(address _bob, address _carol) public payable {
+    constructor(address _bob, address _carol) public {
+        require(msg.sender == owner, "Only owner may call this contract");
         require(_bob != 0);
         require(_carol != 0);
         owner = msg.sender;
